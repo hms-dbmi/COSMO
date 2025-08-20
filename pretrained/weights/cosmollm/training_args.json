@@ -1,0 +1,10 @@
+{
+  "batch_size": 64,
+  "num_instances": 8,
+  "learning_rate": 2e-05,
+  "epochs": 400,
+  "temp": 0.04,
+  "loss_type": "adasp",
+  "bert_embed_dim": 768,
+  "feature_embed_dim": 512
+}

@@ -1,0 +1,72 @@
+{
+    "Chromophobe Renal Cell Carcinoma": [
+      "pale eosinophilic cytoplasm",
+      "prominent cell borders",
+      "perinuclear halo",
+      "raisinoid nuclei",
+      "sheet-like growth pattern",
+      "binucleated cells",
+      "reticulated cytoplasm",
+      "non-overlapping nuclei",
+      "plant-like cell appearance",
+      "koilocytic-like features",
+      "voluminous cytoplasm",
+      "well-defined cell membranes"
+    ],
+    "Papillary Renal Cell Carcinoma": [
+      "papillary architecture",
+      "fibrovascular cores",
+      "foamy histiocytes",
+      "nuclear pseudostratification",
+      "psammoma bodies",
+      "hemosiderin pigment",
+      "nuclear grooves",
+      "intracytoplasmic hemosiderin",
+      "frond-like growth pattern",
+      "basophilic cytoplasm",
+      "prominent nucleoli",
+      "edematous fibrovascular stalks"
+    ],
+    "Renal Clear Cell Carcinoma": [
+      "clear cytoplasm",
+      "alveolar architecture",
+      "delicate vasculature",
+      "chicken-wire vascular pattern",
+      "distinct cell membranes",
+      "compact alveolar nests",
+      "optically empty cytoplasm",
+      "lipid-rich cytoplasm",
+      "sinusoidal vascular spaces",
+      "golden-yellow appearance",
+      "sharply outlined cell borders",
+      "centrally placed nuclei"
+    ],
+    "Collecting Duct Renal Cell Carcinoma": [
+      "tubular architecture",
+      "desmoplastic stroma",
+      "high-grade nuclear features",
+      "infiltrative growth pattern",
+      "hobnail cells",
+      "tubulopapillary pattern",
+      "intraluminal mucin",
+      "angulated tubules",
+      "stromal reaction",
+      "solid growth pattern",
+      "pleomorphic nuclei",
+      "intratubular neutrophils"
+    ],
+    "Wilms Tumor": [
+      "triphasic pattern",
+      "blastemal component",
+      "epithelial differentiation",
+      "stromal component",
+      "abortive glomeruli",
+      "primitive tubules",
+      "serpentine pattern",
+      "myxoid mesenchyme",
+      "rosette formation",
+      "nodular growth pattern",
+      "heterologous elements",
+      "condensed blue cells"
+    ]
+  }
