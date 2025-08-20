@@ -171,3 +171,7 @@ secrets.yaml
 !src/cosmo/**
 !src/cosmo
 !requirements.txt
+
+__pycache__/
+*.py[cod]
+*$py.class
