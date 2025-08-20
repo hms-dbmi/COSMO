@@ -1,0 +1,35 @@
+{
+    "Chromophobe Renal Cell Carcinoma": [
+        "chromophobe renal cell carcinoma",
+        "renal cell carcinoma, chromophobe type",
+        "renal cell carcinoma of the chromophobe type",
+        "chromophobe rcc"
+    ],
+    "Papillary Renal Cell Carcinoma": [
+        "papillary renal cell carcinoma",
+        "renal cell carcinoma, papillary type",
+        "renal cell carcinoma of the papillary type",
+        "papillary rcc"
+    ],
+    "Renal Clear Cell Carcinoma": [
+        "clear cell renal cell carcinoma",
+        "renal cell carcinoma, clear cell type",
+        "renal cell carcinoma of the clear cell type",
+        "clear cell rcc"
+    ],
+    "Collecting Duct Renal Cell Carcinoma": [
+      "collecting duct renal cell carcinoma",
+      "carcinoma of kidney collecting duct",
+      "carcinoma of renal collecting duct",
+      "renal medullary carcinoma"
+    ],
+    "Unclassified Renal Cell Carcinoma": [
+      "unclassified renal cell carcinoma"
+    ],
+    "Wilms Tumor": [
+      "wilms tumor (nephroblastoma)",
+      "renal cancer, wilms",
+      "kidney wilms tumor",
+      "wilms tumor"
+    ]
+  }

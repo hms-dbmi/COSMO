@@ -1,0 +1,39 @@
+{
+  "Lung Adenocarcinoma": [
+    "adenocarcinoma",
+    "lung adenocarcinoma",
+    "adenocarcinoma of the lung",
+    "luad"
+  ],
+  "Lung Squamous Cell Carcinoma": [
+    "lung cancer, squamous cell",
+    "squamous cell lung carcinoma",
+    "lusc",
+    "squamous cell carcinoma of the lung"
+  ],
+  "Small Cell Lung Cancer": [
+    "lung small cell carcinoma",
+    "sclc",
+    "combined type small cell carcinoma of lung",
+    "lung carcinoma, small cell",
+    "small cell lung cancer, combined type"
+  ],
+  "Lung Carcinoid": [
+    "carcinoid tumor pulmonary",
+    "lung carcinoid tumor",
+    "lung atypical carcinoid tumor",
+    "malignant carcinoid tumor of lung"
+  ],
+  "Lung Neuroendocrine Tumor": [
+    "bronchial neuroendocrine tumor",
+    "lcnec",
+    "lung neuroendocrine neoplasm",
+    "large cell neuroendocrine carcinoma"
+  ],
+  "Lung Adenosquamous Carcinoma": [
+    "adenosquamous cell lung carcinoma",
+    "lung cancer, adenosquamous cell",
+    "adenosquamous lung cancer",
+    "non-oat cell lung cancer, adenosquamous cell"
+  ]
+}

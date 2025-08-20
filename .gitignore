@@ -121,6 +121,7 @@ logs/
 runs/
 wandb/
 .tensorboard/
+__pycache__
 
 # Data files
 data/
@@ -153,6 +154,7 @@ tmp/
 temp/
 *.tmp
 *.temp
+*.pyc
 
 # Config files with secrets
 config.ini
@@ -166,3 +168,6 @@ secrets.yaml
 !pretrained/**
 !src/cosmo/data/knowledge/templates/
 !src/cosmo/data/knowledge/templates/**
+!src/cosmo/**
+!src/cosmo
+!requirements.txt
