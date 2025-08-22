@@ -513,7 +513,7 @@ If you find this work useful, please consider citing our paper:
   volume={[Volume]},
   number={[Number]},
   pages={[Pages]},
-  year={2024},
+  year={2025},
   publisher={[Publisher]},
   doi={[DOI]},
   url={[URL]}
