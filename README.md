@@ -1,6 +1,21 @@
 ## Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis - A Multi-Center Validation Study
 
-**Abstract**: _Cancer diagnosis relies on histopathological evaluation to determine appropriate treatment strategies, however accurate subtyping remains challenging for rare malignancies and morphologically similar subtypes. While vision-language foundation models show promise for computational pathology, existing approaches lack domain-specific biomedical knowledge and struggle with rare cancer subtypes due to limited training examples. To address this, we introduce COSMO, a knowledge-enhanced framework that integrates expert knowledge from pathology literature and biomedical ontologies to improve cancer subtyping across both common and rare malignancies. We curate domain expertise to construct a specialized language model that semantically encodes morphological features and diagnostic concepts. We trained and validated COSMO using 7,062 samples from nine patient cohorts spanning three continents, covering brain, lung, and kidney cancers with diverse histological subtypes. COSMO achieves balanced accuracies of 80.5% for common cancers and 66.2% for rare cancers, including subtypes with incidence rates as low as 0.22 per 100,000 person-years, outperforming standard pathology foundation models by up to 11.5%. The framework extracts interpretable pathology concepts aligned with WHO diagnostic criteria and features a modular architecture enabling integration with existing foundation models, demonstrating strong generalizability and clinical potential._
+**Abstract**: _Cancer diagnosis relies on pathological evaluation to determine appropriate treatment strategies. However,
+accurate subtyping remains challenging for morphologically similar subtypes and rarer malignancies
+not present in publicly available datasets. While vision-language foundation models show promise
+for computational pathology, existing approaches lack domain-specific biomedical knowledge and struggle
+with uncommon pathology manifestations due to limited training examples. To address this, we
+introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a knowledge-enhanced
+framework that integrates expert knowledge from pathology literature and biomedical ontologies to
+improve cancer subtyping across both common and rare malignancies. We curate domain knowledge
+to construct a specialized language model that semantically encodes morphological features and diagnostic
+concepts. We trained and validated COSMO using 7,062 samples from nine patient cohorts
+spanning three continents, covering brain, lung, and kidney cancers with diverse pathological subtypes.
+COSMO achieves balanced accuracies of 80.5% for common cancers and 66.2% for rare cancers, including
+subtypes with incidence rates as low as 0.22 per 100,000 person-years, outperforming standard
+pathology foundation models by up to 11.5%. Our framework extracts interpretable pathology
+concepts aligned with WHO diagnostic criteria and features a modular architecture enabling integration
+with existing foundation models, demonstrating strong generalizability and clinical applicability.._
 
 <img src='docs/fig1.png' width="1400px" align="center"/>
 
@@ -25,7 +40,7 @@
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.10+
 - PyTorch 2.0+
 - CUDA 11.8+ (for GPU support)
 - 16GB+ GPU memory (recommended)
@@ -47,8 +62,6 @@ pip install accelerate
 pip install scikit-learn pandas numpy tqdm
 pip install requests beautifulsoup4  # For knowledge extraction
 
-# For development
-pip install pytest black isort
 ```
 
 ### Optional: CONCH Model Setup
