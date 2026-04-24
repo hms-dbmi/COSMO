@@ -1,21 +1,6 @@
 ## Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis - A Multi-Center Validation Study
 
-**Abstract**: _Cancer diagnosis relies on pathological evaluation to determine appropriate treatment strategies. However,
-accurate subtyping remains challenging for morphologically similar subtypes and rarer malignancies
-not present in publicly available datasets. While vision-language foundation models show promise
-for computational pathology, existing approaches lack domain-specific biomedical knowledge and struggle
-with uncommon pathology manifestations due to limited training examples. To address this, we
-introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a knowledge-enhanced
-framework that integrates expert knowledge from pathology literature and biomedical ontologies to
-improve cancer subtyping across both common and rare malignancies. We curate domain knowledge
-to construct a specialized language model that semantically encodes morphological features and diagnostic
-concepts. We trained and validated COSMO using 7,062 samples from nine patient cohorts
-spanning three continents, covering brain, lung, and kidney cancers with diverse pathological subtypes.
-COSMO achieves balanced accuracies of 80.5% for common cancers and 66.2% for rare cancers, including
-subtypes with incidence rates as low as 0.22 per 100,000 person-years, outperforming standard
-pathology foundation models by up to 11.5%. Our framework extracts interpretable pathology
-concepts aligned with WHO diagnostic criteria and features a modular architecture enabling integration
-with existing foundation models, demonstrating strong generalizability and clinical applicability.._
+**Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,062 samples from nine patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 10 to 27 percentage points in fully supervised settings and 34 to 55 percentage points in few-shot settings, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and intervention experiments confirmed that these features causally drive model predictions. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; post-hoc noninferiority p=0.039 at delta=10% of pathologist BACC). Our framework extracts interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites.._
 
 <img src='docs/fig1.png' width="1400px" align="center"/>
 
@@ -191,7 +176,7 @@ python ./src/cosmo/data/knowledge/oncotree_extractor.py \
 }
 ```
 
-**Code Reference**: [`src/cosmo/data/knowledge/oncotree_extractor.py`](src/cosmo/data/knowledge/oncotree_extractor.py)
+**Code Reference**: [`src/cosmo/data/knowledge/oncotrecime_extractor.py`](src/cosmo/data/knowledge/oncotree_extractor.py)
 
 #### 1.2 NCI Thesaurus Enrichment
 
