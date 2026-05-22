@@ -1,6 +1,24 @@
-## Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis - A Multi-Center Validation Study
+# COSMO
 
-**Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,062 samples from nine patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 10 to 27 percentage points in fully supervised settings and 34 to 55 percentage points in few-shot settings, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and intervention experiments confirmed that these features causally drive model predictions. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; post-hoc noninferiority p=0.039 at delta=10% of pathologist BACC). Our framework extracts interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites.._
+## Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis — A Multi-Center Validation Study
+
+[![Paper](https://img.shields.io/badge/Paper-Under%20Review-blue)](#-citation)
+[![License](https://img.shields.io/badge/License-CC--BY--NC--ND%204.0-lightgrey)](#license-and-terms-of-use)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-green)](#-installation)
+[![Trial](https://img.shields.io/badge/ClinicalTrials.gov-NCT07307157-orange)](https://clinicaltrials.gov/study/NCT07307157)
+
+## Updates
+
+- **May 2026**: Documentation and dependencies updated.
+- **Code, pretrained weights, and concept lists will be released upon acceptance.**
+
+## Overview
+
+**COSMO** (Cancer Ontology Supervised Multimodal Orchestration) is a knowledge-guided framework for cancer subtype classification that integrates structured knowledge from biomedical ontologies — **UMLS, NCI Thesaurus, OncoTree** — with pathology foundation models. The framework couples a domain-specific language model trained on curated ontology text with attention-based concept fusion over WSI features, enabling robust subtype prediction across both common and rare malignancies.
+
+We validated COSMO on **7,062 samples** from **9 patient cohorts** spanning **5 institutions** and **3 continents**, covering **18 subtypes** of brain, lung, and kidney cancers. COSMO improves balanced accuracy by 10–27 percentage points over standard baselines in fully supervised settings, and 34–55 percentage points in few-shot settings, with gains generalizing across independent cohorts. A pre-registered head-to-head comparison against board-certified specialists ([NCT07307157](https://clinicaltrials.gov/study/NCT07307157)) showed COSMO achieves comparable diagnostic performance (mean BACC 0.622 vs 0.620; equivalence test p = 0.039).
+
+**Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO) a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,062 samples from nine patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 10 to 27 percentage points in fully supervised settings and 34 to 55 percentage points in few-shot settings, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and intervention experiments confirmed that these features causally drive model predictions. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; equivalence test p=0.039). Our framework extracts interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites._
 
 <img src='docs/fig1.png' width="1400px" align="center"/>
 
@@ -18,6 +36,7 @@
   - [Phase 5: Model Inference](#phase-5-model-inference)
 - [🙏 Acknowledgments](#-acknowledgments)
 - [📄 Citation](#-citation)
+- [📜 License](#license-and-terms-of-use)
 
 ---
 
@@ -37,17 +56,14 @@
 conda create -n cosmo python=3.10
 conda activate cosmo
 
-# Install PyTorch
+# Install PyTorch (matching your CUDA version)
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 
-# Install additional dependencies
-pip install transformers>=4.36.0
-pip install peft>=0.4.0
-pip install accelerate
-pip install scikit-learn pandas numpy tqdm
-pip install requests beautifulsoup4  # For knowledge extraction
-
+# Install all remaining Python dependencies
+pip install -r requirements.txt
 ```
+
+The `requirements.txt` pins the deep-learning stack (`torch`, `transformers`, `peft`, `accelerate`), classical ML (`scikit-learn`, `scipy`, `statsmodels`), pathology I/O (`openslide-python`, `h5py`), interpretability (`shap`), and the usual scientific Python toolkit (`pandas`, `numpy`, `matplotlib`, `tqdm`), plus the lightweight web scraping libraries (`beautifulsoup4`, `requests`, `langdetect`) used by the knowledge-extraction phase.
 
 ### Optional: CONCH Model Setup
 
@@ -504,20 +520,14 @@ This work builds upon and was inspired by several excellent open-source projects
 If you find this work useful, please consider citing our paper:
 
 ```bibtex
-@article{chikontwe2025bio,
-  title={Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis - A Multi-Center Validation Study},
-  author={Chikontwe et al.},
-  journal={[Journal Name]},
-  volume={[Volume]},
-  number={[Number]},
-  pages={[Pages]},
-  year={2025},
-  publisher={[Publisher]},
-  doi={[DOI]},
-  url={[URL]}
+@article{chikontwe2026cosmo,
+  title   = {Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis --- A Multi-Center Validation Study},
+  author  = {Chikontwe, Philip and Gong, Xuan and Zhao, Junhan and Vremenko, Dmytro and others},
+  journal = {Under Review},
+  year    = {2026}
 }
 ```
 
-## License and Terms of Use
+## 📜 License and Terms of Use
 
-ⓒ [Yu Lab](https://yulab.hms.harvard.edu). This model and associated code are released under the [CC-BY-NC-ND 4.0]((https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en)) license and may only be used for non-commercial, academic research purposes with proper attribution.
+ⓒ [Yu Lab](https://yulab.hms.harvard.edu). This model and associated code are released under the [CC-BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en) license and may only be used for non-commercial, academic research purposes with proper attribution.
