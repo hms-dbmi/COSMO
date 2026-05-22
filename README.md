@@ -10,7 +10,6 @@
 ## Updates
 
 - **May 2026**: Documentation and dependencies updated.
-- **Code, pretrained weights, and concept lists will be released upon acceptance.**
 
 ## Overview
 
