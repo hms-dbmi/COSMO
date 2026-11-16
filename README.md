@@ -518,6 +518,10 @@ python test.py \
 
 [`demo/cosmo_demo.py`](demo/cosmo_demo.py) runs the released adapters (`pretrained/weights`) on the tile features of one slide and writes the slide prediction, an attention heatmap, a concept activation map, a tile-level uncertainty map and a JSON report with the normalized entropy, maximum softmax probability and mutual information across foundation models. With `--organ auto`, the slide is scored by the brain, lung and kidney models, as done in the paper for slides outside the training scope; high entropy and low confidence flag such slides for review by a pathologist. See [`demo/README.md`](demo/README.md) for a worked example on public TCGA slides, and the Zenodo data record for the pre-extracted features and expected outputs.
 
+<p align="center"><img src="docs/demo_examples.png" width="720" alt="COSMO demo outputs on TCGA slides"></p>
+
+*Demo outputs on public TCGA slides. Columns: slide thumbnail, attention heatmap, and concept activation map (rows 1–2) or mutual-information uncertainty map (row 3). Row 1: papillary renal cell carcinoma (TCGA-B9-4617, kidney model). Row 2: lung adenocarcinoma (TCGA-64-1680, lung model). Row 3: breast carcinoma (TCGA-A1-A0SD), outside the training scope; attention from the lung model and mutual information across foundation models averaged over the three organ models, which is high across the tissue. Concept legends and colour bars are saved as separate files (see [`demo/README.md`](demo/README.md)).*
+
 ```bash
 python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root ./demo/data/features \
     --wsi ./demo/data/slides/<SLIDE_ID>.svs --organ lung --fms uni gigapath chief --out ./demo/outputs
