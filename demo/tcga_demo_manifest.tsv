@@ -1,2 +1,6 @@
 id	filename	md5	size	state	role
-# fill from the GDC portal: one row per demo slide (file UUID, .svs name, md5, size, released)
+42a49b1b-70f8-4fb4-8bbe-e9c7afb7aa0e	TCGA-64-1680-01Z-00-DX1.9CB14F20-E7B0-49A1-A327-404B3160FD65.svs	425a51f222c2a123ab20f10b856bc41d	470781403	released	TCGA_LUNG_1 (TCGA-LUAD; lung model, common subtype)
+13c71a42-d1eb-4f46-b2bc-82575007a83b	TCGA-98-A538-01Z-00-DX1.42BC06E8-8E8F-4CF0-A757-B5201BB2794F.svs	473013d39c49fb8d6f6f62a48869c63c	358926455	released	TCGA_LUNG_2 (TCGA-LUSC; lung model, common subtype)
+2a296eae-edd6-409d-800f-701ea7dc6d8c	TCGA-B9-4617-01Z-00-DX1.d890e850-cc29-49f8-b854-cbe9a9a73c95.svs	4fcab8bf3000909d0682c674f3a6cf61	120966981	released	TCGA_KIDNEY_1 (TCGA-KIRP; kidney model, common subtype)
+e8fb92b1-3aad-4485-896a-cc4005b9a6b9	TCGA-KN-8421-01Z-00-DX1.A90EB3F7-DE68-4078-BB5B-B35561F96071.svs	cd13fb684fffa6ed845dcb620b852ab9	456063677	released	TCGA_KIDNEY_2 (TCGA-KICH; kidney model, common subtype)
+0a9ea7ac-9d51-4ff7-b40b-659a57e64945	TCGA-A1-A0SD-01Z-00-DX1.DB17BFA9-D951-42A8-91D2-F4C2EBC6EB9F.svs	85079bc9f671b29dfebc3d63fdf6b685	655624470	released	TCGA_OOD_1 (TCGA-BRCA; out of scope, --organ auto)
