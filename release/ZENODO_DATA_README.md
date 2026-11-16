@@ -8,7 +8,7 @@ https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
 
 | Folder | What it holds |
 |---|---|
-| `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic cohorts used for the uncertainty analyses. Paths follow the code: `<cohort>_<ratio>_<label set>/<method>_none_<model>_<ratio>/[<training cohort>/]predictions_<method>_test_<run>_<split>.csv`. See *Naming* below. |
+| `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic cohorts used for the uncertainty analyses. Paths follow the code: `<cohort>_<ratio>_<label set>/<method>[_none]_<model>_<ratio>/[<training cohort>/]predictions_<method>_test_<run>_<split>.csv`. See *Naming* below. |
 | `splits/` | The five patient-level DFCI splits (`splits_{0-4}.csv`; columns train, val, test). |
 | `slide_to_patient/` | Slide-to-patient map for each cohort, used for patient-level bootstrap CIs. |
 | `demo/` | For five public TCGA slides (two lung, two kidney, one breast outside the training scope): tile features (UNI, GigaPath, CHIEF; .h5 with `features` and `coords`, one shared tile grid per slide), slide thumbnails, expected outputs, and `tcga_demo_manifest.tsv` (GDC file IDs and md5) for downloading the .svs files if you want to re-extract features. |
@@ -18,8 +18,12 @@ https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
 ## Naming
 
 - **Training setting (`<ratio>`):** `0.16` = full-shot (all training slides), `0.4` = few-shot (4 slides per
-  subtype). The ratio is the value of the code's `--ratio` argument, kept so that files match the code. Other
-  ratio values are additional runs not reported in the paper.
+  subtype), `1.0` = zero-shot (no training on our cohorts). The ratio is the value of the code's `--ratio`
+  argument, kept so that files match the code.
+- **Method (`<method>`):** `oursmm` = COSMO; `abmil`, `clam`, `meanmil` = MIL baselines; `coop`, `top`,
+  `cate`, `mscpt` = vision-language prompt/adapter baselines; `zsvlm` = zero-shot CONCH or KEEP;
+  `prism2` = zero-shot Prism2 (Virchow2 tile features). Only the evaluations reported in the paper are
+  included (no ablations).
 - **Run:** `test_<k>` is DFCI split *k* (`splits/splits_<k>.csv`). External cohorts are scored by each run's model.
 - **Split:** `seen` = common subtypes, `unseen` = rare subtypes, `all` = all subtypes (generalized zero-shot setting).
 - **Training cohort:** for external cohorts, the extra folder (e.g. `dfcilung_coarse/`) names the DFCI cohort the model was trained on.
