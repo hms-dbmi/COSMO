@@ -6,18 +6,23 @@
 [![License](https://img.shields.io/badge/License-CC--BY--NC--ND%204.0-lightgrey)](#license-and-terms-of-use)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-green)](#-installation)
 [![Trial](https://img.shields.io/badge/ClinicalTrials.gov-NCT07307157-orange)](https://clinicaltrials.gov/study/NCT07307157)
+[![Code DOI](https://img.shields.io/badge/Code%20DOI-10.5281%2Fzenodo.CODE__ID-blue)](https://doi.org/10.5281/zenodo.CODE_ID)
+[![Data DOI](https://img.shields.io/badge/Data%20DOI-10.5281%2Fzenodo.DATA__ID-blue)](https://doi.org/10.5281/zenodo.DATA_ID)
 
 ## Updates
 
+- **November 2026**: Release v1.0 for the revised manuscript: demo for attention heatmaps, concept activation maps and uncertainty (including slides outside the training scope), lung and kidney label maps, and a Zenodo archive of slide-level predictions and patient-level splits.
 - **May 2026**: Documentation and dependencies updated.
 
 ## Overview
 
 **COSMO** (Cancer Ontology Supervised Multimodal Orchestration) is a knowledge-guided framework for cancer subtype classification that integrates structured knowledge from biomedical ontologies — **UMLS, NCI Thesaurus, OncoTree** — with pathology foundation models. The framework couples a domain-specific language model trained on curated ontology text with attention-based concept fusion over WSI features, enabling robust subtype prediction across both common and rare malignancies.
 
-We validated COSMO on **7,062 samples** from **9 patient cohorts** spanning **5 institutions** and **3 continents**, covering **18 subtypes** of brain, lung, and kidney cancers. COSMO improves balanced accuracy by 10–27 percentage points over standard baselines in fully supervised settings, and 34–55 percentage points in few-shot settings, with gains generalizing across independent cohorts. A pre-registered head-to-head comparison against board-certified specialists ([NCT07307157](https://clinicaltrials.gov/study/NCT07307157)) showed COSMO achieves comparable diagnostic performance (mean BACC 0.622 vs 0.620; equivalence test p = 0.039).
+We validated COSMO on **7,727 whole-slide images** from **10 patient cohorts** spanning **5 institutions** and **3 continents**, covering **18 subtypes** of brain, lung, and kidney cancers. COSMO improves balanced accuracy over standard baselines by 8 to 30 percentage points in fully supervised settings and 34 to 44 percentage points in few-shot settings on average, with gains generalizing across independent cohorts. A preregistered head-to-head comparison with specialists ([NCT07307157](https://clinicaltrials.gov/study/NCT07307157)) showed comparable diagnostic performance (mean BACC 0.622 vs 0.620; equivalence test p = 0.039).
 
-**Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO) a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,062 samples from nine patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 10 to 27 percentage points in fully supervised settings and 34 to 55 percentage points in few-shot settings, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and intervention experiments confirmed that these features causally drive model predictions. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; equivalence test p=0.039). Our framework extracts interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites._
+**Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,727 whole-slide images from ten patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 8 to 30 percentage points in fully supervised settings and 34 to 44 percentage points in few-shot settings on average, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and removing concept embeddings reduced classification performance. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; equivalence test p=0.039). Our framework associates predictions with interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites._
+
+> **Intended use.** COSMO is a research tool for decision support in subtyping slides already diagnosed as malignant brain, lung or kidney tumors. Concept scores are model-derived associations, not evidence that the named morphology is present. It is not a medical device and must not be used for autonomous diagnosis.
 
 <img src='docs/fig1.png' width="1400px" align="center"/>
 
@@ -33,6 +38,8 @@ We validated COSMO on **7,062 samples** from **9 patient cohorts** spanning **5 
   - [Phase 3: Text Embedding Extraction](#phase-3-text-embedding-extraction)
   - [Phase 4: Multimodal Model Training](#phase-4-multimodal-model-training)
   - [Phase 5: Model Inference](#phase-5-model-inference)
+- [🔬 Demo: heatmaps, concept maps and uncertainty](#-demo-heatmaps-concept-maps-and-uncertainty)
+- [🗂️ Data and code availability](#️-data-and-code-availability)
 - [🙏 Acknowledgments](#-acknowledgments)
 - [📄 Citation](#-citation)
 - [📜 License](#license-and-terms-of-use)
@@ -191,7 +198,7 @@ python ./src/cosmo/data/knowledge/oncotree_extractor.py \
 }
 ```
 
-**Code Reference**: [`src/cosmo/data/knowledge/oncotrecime_extractor.py`](src/cosmo/data/knowledge/oncotree_extractor.py)
+**Code Reference**: [`src/cosmo/data/knowledge/oncotree_extractor.py`](src/cosmo/data/knowledge/oncotree_extractor.py)
 
 #### 1.2 NCI Thesaurus Enrichment
 
@@ -408,7 +415,7 @@ Extract concept and class embeddings from trained language models for use in mul
 
 #### 3.1 Extract Using COSMO Model
 
-Extract embeddings using your trained COSMO language model [`example script`](scripts/test_txtembs.sh):
+Extract embeddings using your trained COSMO language model [`example script`](scripts/test_textembs.sh):
 
 ```bash
 # Extract embeddings with trained COSMO model
@@ -462,11 +469,11 @@ TCGA-02-0003,TCGA-02-0003-01Z,Pituitary Adenoma,Tumours of the sellar region,/pa
 
 #### 4.2 Multimodal Training
 
-Train the multimodal COSMO model using [`train_mllm.py`](train_mllm.py):
+Train the multimodal COSMO model using [`train.py`](train.py):
 
 ```bash
 # Train multimodal model
-python train_mllm.py \
+python train.py \
     --wsi-root ./data/wsi_features \
     --patient-csv ./data/csv/patient_metadata.csv \
     --split-csv ./data/splits \
@@ -478,7 +485,7 @@ python train_mllm.py \
     --lr 2e-5
 ```
 
-**Code Reference**: [`scripts/test_train.py`](scripts/test_train.sh)
+**Code Reference**: [`scripts/test_train.sh`](scripts/test_train.sh)
 
 ---
 
@@ -494,7 +501,7 @@ python test.py \
     --wsi-root ./data/wsi_features \
     --patient-csv ./data/csv/patient_metadata.csv \
     --split-csv ./data/splits \
-    --checkpoint ./checkpoints/cosmo/model_best.pth \
+    --checkpoint ./checkpoints/cosmo   # folder with visual_model_{run}.pt \
     --concept-root ./pretrained/concepts \
     --prev-type brainNIH \
     --text-model cosmo \
@@ -504,6 +511,25 @@ python test.py \
 
 **Test Script**: [`inference example`](scripts/test_inference.sh)
 **More Examples**: see [`scripts folder`](scripts/).
+
+---
+
+## 🔬 Demo: heatmaps, concept maps and uncertainty
+
+[`demo/cosmo_demo.py`](demo/cosmo_demo.py) runs the released adapters (`pretrained/weights`) on the tile features of one slide and writes the slide prediction, an attention heatmap, a concept activation map, a tile-level uncertainty map and a JSON report with the normalized entropy, maximum softmax probability and mutual information across foundation models. With `--organ auto`, the slide is scored by the brain, lung and kidney models, as done in the paper for slides outside the training scope; high entropy and low confidence flag such slides for review by a pathologist. See [`demo/README.md`](demo/README.md) for a worked example on public TCGA slides, and the Zenodo data record for the pre-extracted features and expected outputs.
+
+```bash
+python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root ./demo/data/features \
+    --wsi ./demo/data/slides/<SLIDE_ID>.svs --organ lung --fms uni gigapath chief --out ./demo/outputs
+```
+
+---
+
+## 🗂️ Data and code availability
+
+- **Code**: this repository, archived at Zenodo ([10.5281/zenodo.CODE_ID](https://doi.org/10.5281/zenodo.CODE_ID)).
+- **Slide-level predictions and splits**: per-slide softmax outputs for every cohort, foundation model, training setting and split, with patient-level split files, at Zenodo ([10.5281/zenodo.DATA_ID](https://doi.org/10.5281/zenodo.DATA_ID)). Institutional slide identifiers are replaced by salted hashes; TCGA identifiers are kept. [`release/compute_metrics.py`](release/compute_metrics.py) recomputes balanced accuracy and AUROC with patient-level bootstrap CIs from these files.
+- **Images**: TCGA slides are available from the [GDC portal](https://portal.gdc.cancer.gov/); the MUV brain cohort from [EBRAINS](https://doi.org/10.25493/WQ48-ZGX). Slides from DFCI, MUV lung, TVGH and HKU are available under institutional data use agreements through the lead contact.
 
 ---
 

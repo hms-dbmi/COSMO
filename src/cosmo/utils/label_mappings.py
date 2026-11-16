@@ -23,7 +23,30 @@ LABEL_MAP: Dict[str, Dict[str, int]] = {
         'Paediatric-type diffuse low-grade gliomas': 4,
         'Glioneuronal and neuronal tumours': 5, 
         'Embryonal Tumours': 6,
-    }, 
+    },
+
+    "lungNIH": {
+        # Common (seen classes)
+        "Lung Adenocarcinoma": 0,
+        "Lung Squamous Cell Carcinoma": 1,
+
+        # Rare (unseen classes)
+        "Small Cell Lung Cancer": 2,
+        "Lung Carcinoid": 3,
+        "Lung Neuroendocrine Tumor": 4,
+        "Lung Adenosquamous Carcinoma": 5,
+    },
+
+    "kidneyNIH": {
+        # Common (seen classes)
+        "Chromophobe Renal Cell Carcinoma": 0,
+        "Papillary Renal Cell Carcinoma": 1,
+        "Renal Clear Cell Carcinoma": 2,
+
+        # Rare (unseen classes)
+        "Collecting Duct Renal Cell Carcinoma": 3,
+        "Wilms Tumor": 4,
+    },
 }
 
 # Classes to ignore during processing

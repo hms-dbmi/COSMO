@@ -1,0 +1,19 @@
+{
+  "title": "COSMO: Cancer Ontology Supervised Multimodal Orchestration (code, v1.0)",
+  "upload_type": "software",
+  "description": "Code, Stage I language model weights, concept embeddings and Stage II adapter weights for COSMO, a knowledge-guided framework for subtyping common and rare brain, lung and kidney cancers from whole-slide images. Archived release of https://github.com/hms-dbmi/COSMO accompanying the manuscript 'Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer Pathology Diagnosis - A Multi-Center Validation Study'.",
+  "creators": [
+    {"name": "Chikontwe, Philip", "affiliation": "Department of Biomedical Informatics, Harvard Medical School"},
+    {"name": "Gong, Xuan", "affiliation": "Department of Biomedical Informatics, Harvard Medical School"},
+    {"name": "Zhao, Junhan", "affiliation": "Department of Biomedical Informatics, Harvard Medical School"},
+    {"name": "Vremenko, Dmytro", "affiliation": "Department of Biomedical Informatics, Harvard Medical School"},
+    {"name": "Yu, Kun-Hsing", "affiliation": "Department of Biomedical Informatics, Harvard Medical School"}
+  ],
+  "keywords": ["computational pathology", "rare cancers", "foundation models", "biomedical ontologies", "vision-language models", "whole-slide images"],
+  "license": "cc-by-nc-nd-4.0",
+  "access_right": "open",
+  "related_identifiers": [
+    {"identifier": "https://github.com/hms-dbmi/COSMO", "relation": "isSupplementTo", "scheme": "url"},
+    {"identifier": "10.5281/zenodo.DATA_ID", "relation": "isSupplementedBy", "scheme": "doi"}
+  ]
+}
