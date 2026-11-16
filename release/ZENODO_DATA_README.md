@@ -10,7 +10,7 @@ https://github.com/hms-dbmi/COSMO. Record: [10.5281/zenodo.24291267](https://doi
 |---|---|
 | `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic cohorts used for the uncertainty analyses. Paths follow the code: `<cohort>_<ratio>_<label set>/<method>[_none]_<model>_<ratio>/[<training cohort>/]predictions_<method>_test_<run>_<split>.csv`. See *Naming* below. |
 | `splits/` | The five patient-level DFCI splits for brain, lung and kidney (`splits_{0-4}.csv`; columns train, val, test). |
-| `features_chief_<cohort>.zip` | CHIEF tile features, labels and splits for training and testing COSMO (see *Training features*). Checksums in `MD5SUMS.txt`. |
+| `features_<model>_<cohort>.zip` | CHIEF and UNI tile features, labels and splits for training and testing COSMO (see *Training features*). Checksums in `MD5SUMS.txt`. |
 | `slide_to_patient/` | Slide-to-patient map for each cohort, used for patient-level bootstrap CIs. |
 | `demo/` | For five public TCGA slides (two lung, two kidney, one breast outside the training scope): tile features (UNI, GigaPath, CHIEF; .h5 with `features` and `coords`, one shared tile grid per slide), slide thumbnails, expected outputs, and `tcga_demo_manifest.tsv` (GDC file IDs and md5) for downloading the .svs files if you want to re-extract features. |
 | `Data_S1_Source_Data.xlsx` | Values plotted in every graph of the paper, one tab per figure. |
@@ -30,21 +30,23 @@ https://github.com/hms-dbmi/COSMO. Record: [10.5281/zenodo.24291267](https://doi
 - **Split:** `seen` = common subtypes, `unseen` = rare subtypes, `all` = all subtypes (generalized zero-shot setting).
 - **Training cohort:** for external cohorts, the extra folder (e.g. `dfcilung_coarse/`) names the DFCI cohort the model was trained on.
 
-## Training features (CHIEF)
+## Training features (CHIEF and UNI)
 
-CHIEF tile features (768-d, float32, exactly as used in the paper) for training and testing COSMO:
+Tile features (float32, exactly as used in the paper) from two foundation models, CHIEF (768-d) and UNI
+(1024-d), for training and testing COSMO. Files are named `features_<model>_<cohort>.zip`:
 
-| Zip | Cohort | Role | Slides | Patients | Splits |
-|---|---|---|---|---|---|
-| `features_chief_dfcibrain.zip` | DFCI brain | development | 1,010 | 978 | 5 |
-| `features_chief_dfcilung.zip` | DFCI lung | development | 992 | 912 | 5 |
-| `features_chief_dfcikidney.zip` | DFCI kidney | development | 232 | 230 | 5 |
-| `features_chief_tcgakidneytest.zip` | TCGA kidney | external test | 895 | 895 | none (all test) |
+| Cohort (`<cohort>`) | Role | Slides | Patients | Splits | CHIEF zip | UNI zip |
+|---|---|---|---|---|---|---|
+| DFCI brain (`dfcibrain`) | development | 1,010 | 978 | 5 | 4.35 GB | 5.79 GB |
+| DFCI lung (`dfcilung`) | development | 992 | 912 | 5 | 4.10 GB | 5.46 GB |
+| DFCI kidney (`dfcikidney`) | development | 232 | 230 | 5 | 1.41 GB | 1.88 GB |
+| MUV brain / EBRAINS (`ebrainstest`) | external test | 1,611 | 1,498 | none (all test) | 1.85 GB | 2.46 GB |
+| TCGA kidney (`tcgakidneytest`) | external test | 895 | 895 | none (all test) | 1.31 GB | 1.74 GB |
 
-Each zip contains `<cohort>/chief/<slide>.pt` (one tensor `[n_tiles, 768]` per slide), `<cohort>/labels.csv`
+Each zip contains `<cohort>/<model>/<slide>.pt` (one tensor `[n_tiles, D]` per slide), `<cohort>/labels.csv`
 (`slide_id, case_id, class_name`), `<cohort>/splits/splits_{0-4}.csv` (DFCI only) and `<cohort>/README.txt`.
 Identifiers are the same hashes as in `predictions/` and `slide_to_patient/`. Features for the other
-cohorts (and other foundation models) are available from the lead contact under data use agreements.
+cohorts and foundation models are available from the lead contact under data use agreements.
 
 Train on DFCI kidney and test on TCGA kidney (full commands in `scripts/release_train_example.sh` of the
 code repository):
