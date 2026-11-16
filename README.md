@@ -6,7 +6,6 @@
 [![License](https://img.shields.io/badge/License-CC--BY--NC--ND%204.0-lightgrey)](#license-and-terms-of-use)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-green)](#-installation)
 [![Trial](https://img.shields.io/badge/ClinicalTrials.gov-NCT07307157-orange)](https://clinicaltrials.gov/study/NCT07307157)
-[![Code DOI](https://img.shields.io/badge/Code%20DOI-10.5281%2Fzenodo.CODE__ID-blue)](https://doi.org/10.5281/zenodo.CODE_ID)
 [![Data DOI](https://img.shields.io/badge/Data%20DOI-10.5281%2Fzenodo.24291267-blue)](https://doi.org/10.5281/zenodo.24291267)
 
 ## Updates
@@ -531,7 +530,7 @@ python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root ./demo/data/feat
 
 ## 🗂️ Data and code availability
 
-- **Code**: this repository, archived at Zenodo ([10.5281/zenodo.CODE_ID](https://doi.org/10.5281/zenodo.CODE_ID)).
+- **Code**: this repository, [https://github.com/hms-dbmi/COSMO](https://github.com/hms-dbmi/COSMO).
 - **Slide-level predictions and splits**: per-slide softmax outputs for every cohort, foundation model, training setting and split, with patient-level split files, at Zenodo ([10.5281/zenodo.24291267](https://doi.org/10.5281/zenodo.24291267)). Institutional slide identifiers are replaced by salted hashes; TCGA identifiers are kept. [`release/compute_metrics.py`](release/compute_metrics.py) recomputes balanced accuracy and AUROC with patient-level bootstrap CIs from these files.
 - **Images**: TCGA slides are available from the [GDC portal](https://portal.gdc.cancer.gov/); the MUV brain cohort from [EBRAINS](https://doi.org/10.25493/WQ48-ZGX). Slides from DFCI, MUV lung, TVGH and HKU are available under institutional data use agreements through the lead contact.
 
