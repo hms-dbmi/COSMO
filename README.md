@@ -122,8 +122,6 @@ COSMO/
 │   └── tcga_demo_manifest.tsv          # GDC file IDs of the demo slides
 ├── release/                            # Zenodo data record (10.5281/zenodo.24291267)
 │   ├── ZENODO_DATA_README.md           # README of the data record
-│   ├── export_predictions.py           # Exports predictions and splits with hashed identifiers
-│   ├── export_features.py              # Packages tile features, labels and splits per cohort
 │   └── compute_metrics.py              # Recomputes BACC/AUROC with patient-level bootstrap CIs
 ├── scripts/
 │   ├── extract_embeddings.py           # Text (concept/class) embedding extraction
@@ -139,7 +137,6 @@ COSMO/
 │       └── {brainNIH,lungNIH,kidneyNIH}/{uni,gigapath,chief,conch}/   # Stage II adapters
 ├── docs/                               # Figures (fig1.png, demo_examples.png)
 ├── results/                            # Inference outputs
-├── CITATION.cff
 ├── requirements.txt
 │
 │   # local folders (not tracked in git)

@@ -175,3 +175,7 @@ secrets.yaml
 __pycache__/
 *.py[cod]
 *$py.class
+# private release tooling (kept locally, not distributed)
+release/export_predictions.py
+release/export_features.py
+CITATION.cff
