@@ -21,8 +21,6 @@ We validated COSMO on **7,727 whole-slide images** from **10 patient cohorts** s
 
 **Abstract**: _Cancer evaluation relies on detailed pathological assessment to guide treatment decisions. However, accurate subtyping remains challenging for morphologically similar tumors and rarer malignancies that are underrepresented in existing datasets. Although pathology foundation models show promise, current approaches underutilize domain-specific biomedical knowledge and struggle with uncommon pathology manifestations in data-limited settings. To address this challenge, we introduce Cancer Ontology Supervised Multimodal Orchestration (COSMO), a framework that integrates structured knowledge from biomedical ontologies (UMLS, NCI Thesaurus, OncoTree) with pathology foundation models to enhance cancer diagnosis across both common and rare malignancies. COSMO constructs a specialized language model encoding morphological concepts and aligns these representations with visual features through attention-based concept fusion. The framework features a modular architecture compatible with multiple foundation models spanning vision-only and vision-language encoder families. We validated COSMO on 7,727 whole-slide images from ten patient cohorts spanning five institutions and three continents, covering 18 subtypes of brain, lung, and kidney cancers. COSMO enhanced balanced accuracy (BACC) over standard baselines by 8 to 30 percentage points in fully supervised settings and 34 to 44 percentage points in few-shot settings on average, with gains generalizing across independent cohorts. Concept activation analysis revealed subtype-specific feature patterns that correlate with established diagnostic criteria, and removing concept embeddings reduced classification performance. In a head-to-head comparison study (NCT07307157), COSMO achieved performance comparable to specialists (mean BACC 0.622 vs 0.620; equivalence test p=0.039). Our framework associates predictions with interpretable pathology concepts that correlate with WHO diagnostic criteria and integrates seamlessly with existing foundation models, enabling generalizability across institutions and organ sites._
 
-> **Intended use.** COSMO is a research tool for decision support in subtyping slides already diagnosed as malignant brain, lung or kidney tumors. Concept scores are model-derived associations, not evidence that the named morphology is present. It is not a medical device and must not be used for autonomous diagnosis.
-
 <img src='docs/fig1.png' width="1400px" align="center"/>
 
 ---
@@ -94,62 +92,60 @@ print('CONCH logit scale saved to ./pretrained/conch_logit_scale.pt')
 
 ## 📁 Repository Structure
 
-After installation, your COSMO repository should be organized as follows:
-
 ```
 COSMO/
 ├── src/cosmo/                          # Main package
-│   ├── __init__.py
 │   ├── data/
-│   │   ├── __init__.py
-│   │   ├── knowledge/                  # Knowledge extraction modules
-│   │   │   ├── __init__.py
+│   │   ├── knowledge/                  # Knowledge extraction (OncoTree, NCI Thesaurus, UMLS, histology/cytology)
 │   │   │   ├── oncotree_extractor.py   # OncoTree API interface
 │   │   │   ├── nci_extractor.py        # NCI Thesaurus integration
 │   │   │   ├── umls_extractor.py       # UMLS concept mapping
 │   │   │   ├── histcyto_extractor.py   # Pathology feature extraction
 │   │   │   ├── csv_generator.py        # Training data generation
-│   │   │   └── templates/              # Knowledge templates (JSON)
-│   │   │       ├── brainKT_prompt_names_vlm.json
-│   │   │       ├── lungKT_prompt_names_vlm.json
-│   │   │       └── kidneyKT_prompt_names_vlm.json
-│   │   └── dataloaders/                # Data loading utilities
-│   │       ├── __init__.py
-│   │       ├── pathkt_data.py          # PathKT knowledge dataloader
+│   │   │   └── templates/              # Prompt templates per organ ({brain,lung,kidney}KT_prompt_names[_vlm].json)
+│   │   └── dataloaders/
+│   │       ├── pathkt_data.py          # Knowledge (text) dataloader
 │   │       └── wsi_data.py             # WSI bag dataloader
 │   ├── models/
-│   │   ├── __init__.py
-│   │   └── llm.py                      # COSMO multimodal models
-│   └── utils/                          # Utility functions
-│       ├── __init__.py
+│   │   └── llm.py                      # COSMO multimodal model
+│   └── utils/
 │       ├── data_utils.py               # Data processing utilities
-│       ├── wsi_utils.py                # WSI-specific utilities  
-│       ├── label_mappings.py           # Cancer type mappings
+│       ├── wsi_utils.py                # WSI feature-path utilities
+│       ├── label_mappings.py           # Subtype label maps (brainNIH, lungNIH, kidneyNIH)
 │       └── training_utils.py           # Training utilities
-├── scripts/                            # Executable scripts
-│   ├── extract_embeddings.py           # Text embedding extraction
-│   ├── test_know.sh                    # Test knowledge pipeline
-│   ├── test_wsibag.sh                  # Test WSI dataloader
-│   └── test_inference.sh               # Test inference
-├── train_llm.py                        # Language model training
-├── test.py                             # Model inference
-├── examples/                           # Example data and configs
-│   └── data/                          # Generated knowledge data
-├── data/                              # Your dataset
-│   ├── wsi_features/                  # WSI feature files (.pt/.pth)
-│   ├── csv/                           # Patient metadata CSV files
-│   └── splits/                        # Train/val/test split files
-├── pretrained/                        # Model artifacts
-│   ├── concepts/                      # Pre-extracted concept embeddings (.npy)
-│   │   ├── brain_closed_concepts.json # Concept definitions
-│   │   ├── brainNIH_cosmo_concepts.npy
-│   │   └── brainNIH_cosmo_class.npy
-│   └── weights/                       # Trained model checkpoints
-│       ├── cosmollm/                  # Language model checkpoints
-│       └── cosmo/                     # Multimodal model checkpoints
-├── results/                           # Inference outputs
-├── checkpoints/                       # Training checkpoints
-
+├── train_llm.py                        # Stage I: language model training
+├── train.py                            # Stage II: COSMO adapter training
+├── test.py                             # Inference and evaluation
+├── demo/                               # Demo on public TCGA slides (see demo/README.md)
+│   ├── cosmo_demo.py                   # Prediction, attention/concept/uncertainty maps, report
+│   ├── make_readme_figure.py           # Builds docs/demo_examples.png from the demo outputs
+│   └── tcga_demo_manifest.tsv          # GDC file IDs of the demo slides
+├── release/                            # Zenodo data record (10.5281/zenodo.24291267)
+│   ├── ZENODO_DATA_README.md           # README of the data record
+│   ├── export_predictions.py           # Exports predictions and splits with hashed identifiers
+│   ├── export_features.py              # Packages tile features, labels and splits per cohort
+│   └── compute_metrics.py              # Recomputes BACC/AUROC with patient-level bootstrap CIs
+├── scripts/
+│   ├── extract_embeddings.py           # Text (concept/class) embedding extraction
+│   ├── release_train_example.sh        # Train/test on the released features
+│   └── test_*.sh                       # Pipeline tests (knowledge, embeddings, WSI loader, training, inference)
+├── pretrained/                         # Released checkpoints
+│   ├── concepts/                       # Concept and class embeddings + concept lists, per organ
+│   │   ├── {brain,lung,kidney}_closed_concepts.json
+│   │   ├── {brain,lung,kidney}NIH_cosmo_concepts.npy
+│   │   └── {brain,lung,kidney}NIH_cosmo_class.npy
+│   └── weights/
+│       ├── cosmollm/                   # Stage I language model (LoRA adapter)
+│       └── {brainNIH,lungNIH,kidneyNIH}/{uni,gigapath,chief,conch}/   # Stage II adapters
+├── docs/                               # Figures (fig1.png, demo_examples.png)
+├── results/                            # Inference outputs
+├── CITATION.cff
+├── requirements.txt
+│
+│   # local folders (not tracked in git)
+├── examples/data/                      # Knowledge files: generate them (Phase 1) and place them here; always git-ignored
+├── checkpoints/                        # Outputs of your own training
+└── data/                               # Your dataset: features, patient CSVs, splits
 ```
 
 ---
@@ -159,6 +155,11 @@ COSMO/
 ### Phase 1: Knowledge Curation
 
 Extract pathology knowledge from biomedical databases and literature to create training data for specialized language models.
+
+> **Where the knowledge files go.** The knowledge files are not distributed with this repository. Once generated
+> (OncoTree, NCI Thesaurus and UMLS JSON files, and the `{brain,lung,kidney}NIH_knowledge_train.csv` training files),
+> place them in `./examples/data/`, which the commands below, `train_llm.py` and `train.py` read by default.
+> `examples/data/` is git-ignored and is never pushed.
 
 #### 1.1 OncoTree Knowledge Extraction
 
@@ -395,7 +396,8 @@ python train_llm.py \
     --epochs 100
 ```
 
-**Generated Artifacts:**
+The released Stage I model is already in `./pretrained/weights/cosmollm/`, so this step is only needed to
+retrain it. **Generated Artifacts** (your own training):
 ```
 ./checkpoints/cosmollm/
 ├── adapter_config.json       # LoRA adapter configuration
@@ -422,7 +424,7 @@ python scripts/extract_embeddings.py \
     --dataset brain \
     --text-model cosmo \
     --prev-type brainNIH \
-    --checkpoint ./checkpoints/cosmollm \
+    --checkpoint ./pretrained/weights/cosmollm \
     --output-dir ./pretrained/concepts
 ```
 

@@ -470,7 +470,7 @@ if __name__ == "__main__":
                       default="./pretrained/concepts",
                       help="Concept root dir.")
     parser.add_argument("--model_name", type=str, 
-                      default="./checkpoints/cosmollm",
+                      default="./pretrained/weights/cosmollm",
                       help="Pretrained model name")
     parser.add_argument("--bert_embed_dim", type=int, default=768,
                       help="BERT embedding dimension")

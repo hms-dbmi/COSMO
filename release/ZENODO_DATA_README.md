@@ -59,7 +59,7 @@ python test.py --wsi-root data/dfcikidney/chief --patient-csv data/dfcikidney/la
 # train on DFCI kidney split 0 (knowledge folder with kidneyNIH_knowledge_train.csv)
 python train.py --prev kidneyNIH --dataset dfcikidney_coarse --feat chief --wsi_root data/dfcikidney/chief \
     --patient_csv data/dfcikidney/labels.csv --split_csv data/dfcikidney/splits --data_path <knowledge dir> \
-    --json src/cosmo/data/knowledge/templates/kidneyKT_prompt_names.json --model_name checkpoints/cosmollm
+    --json src/cosmo/data/knowledge/templates/kidneyKT_prompt_names.json --model_name pretrained/weights/cosmollm
 # TCGA kidney is test only: scripts/release_train_example.sh builds its test-only split from labels.csv
 ```
 

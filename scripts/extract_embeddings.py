@@ -135,7 +135,7 @@ class EmbeddingExtractor:
     
     def _load_cosmo_model(self) -> tuple:
         """Load COSMO PEFT model."""
-        checkpoint_path = self.args.checkpoint or "./checkpoints/cosmollm"
+        checkpoint_path = self.args.checkpoint or "./pretrained/weights/cosmollm"
         
         if not os.path.exists(checkpoint_path):
             raise ValueError(f"COSMO checkpoint not found: {checkpoint_path}")

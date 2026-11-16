@@ -26,7 +26,7 @@ DEVICE="cuda"
 
 OUTPUTDIR="./checkpoints/cosmo"
 # Folder with PEFT weights for COSMOLM.
-PRETRAINED="./checkpoints/cosmollm"
+PRETRAINED="./pretrained/weights/cosmollm"
 # Folder with class and concept embeddings.
 CONCEPTS_DIR="./pretrained/concepts"
 
