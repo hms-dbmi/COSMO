@@ -56,7 +56,7 @@ python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root demo/data/featur
     --wsi demo/data/slides/<SLIDE_ID>.svs --organ auto --out demo/outputs
 ```
 
-Outputs per slide and organ model:
+Outputs per slide and organ model (`<slide>_<organ>_*`) and per slide (`<slide>_*`):
 
 - `*_report.json`: subtype probabilities (ensemble and per foundation model), the top concepts with
   their slide-level probability and subtype, and the uncertainty scores (normalized entropy, maximum
@@ -67,9 +67,10 @@ Outputs per slide and organ model:
 - `*_concepts.pdf`: concept activation map; tiles with above-average attention are coloured by their
   top concept, for the 8 most frequent concepts. Legend in `*_concepts_legend.pdf`
   (`(slide-level probability, subtype) concept`); all concepts in `*_concepts.csv`.
-- `*_mutual_information.pdf`: tile-level disagreement between foundation models (same styling as the
-  attention map).
-- `*_colorbar_{attention,mutual_information}.pdf`: colour scales (maps are normalised per slide).
+- `<slide>_mutual_information.pdf`: one map per slide of the tile-level disagreement between foundation
+  models (same styling as the attention map); for `--organ auto` it is averaged over the three organ models.
+- `colorbar_attention.pdf`, `colorbar_mutual_information.pdf`: one pair per output folder (maps are
+  normalised per slide, so the scale is the same for every slide).
 
 Maps are 1024 x 1024 images without titles, drawn over the slide (`--wsi`) or the thumbnail
 (`--thumbnail`, provided in the Zenodo record).

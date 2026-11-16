@@ -274,7 +274,8 @@ def main():
     canvas = Canvas(a.wsi, a.thumbnail, dims) if coords is not None else None
 
     organs = list(ORGANS) if a.organ == 'auto' else [a.organ]
-    report = {'slide_id': a.slide_id, 'foundation_models': a.fms, 'organ_models': organs, 'per_organ': {}}
+    report = {'slide_id': name, 'foundation_models': a.fms, 'organ_models': organs, 'per_organ': {}}
+    tile_mi_organs = []                                             # tile-level MI per organ model
     for organ in organs:
         prev = ORGANS[organ]
         classes = list(LABEL_MAP[prev].keys())
@@ -304,7 +305,7 @@ def main():
         mapped = lab >= 0
 
         unc = uncertainty(P)
-        tile_mi = entropy(PT.mean(0)) - entropy(PT).mean(0)         # tile-level MI across FMs
+        tile_mi_organs.append(entropy(PT.mean(0)) - entropy(PT).mean(0))   # tile-level MI across FMs
         report['per_organ'][organ] = {
             'predicted_subtype': classes[int(pbar.argmax())],
             'probabilities': {c: round(float(v), 4) for c, v in zip(classes, pbar)},
@@ -326,12 +327,15 @@ def main():
             concept_map(canvas, coords[sel][mapped], lab[mapped], patch_px, os.path.join(a.out, tag + '_concepts.pdf'))
             concept_legend([f'({100 * slide_concept[k]:.2f}%, {owners[k]}) {names[k].lower()}' for k in top],
                            os.path.join(a.out, tag + '_concepts_legend.pdf'))
-            smooth_map(canvas, coords, tile_mi, patch_px, os.path.join(a.out, tag + '_mutual_information.pdf'),
-                       UNC_SIGMA, UNC_ALPHA, grey=GREY_UNC)
 
     if canvas is not None:
-        colorbar(os.path.join(a.out, f'{name}_colorbar_attention.pdf'), 'Attention (normalised)')
-        colorbar(os.path.join(a.out, f'{name}_colorbar_mutual_information.pdf'), 'Mutual information (normalised)')
+        # one MI map per slide; outside the training scope, MI is averaged over the organ models
+        # (as for the slide-level out_of_scope_scores)
+        smooth_map(canvas, coords, np.mean(tile_mi_organs, 0), patch_px,
+                   os.path.join(a.out, f'{name}_mutual_information.pdf'), UNC_SIGMA, UNC_ALPHA, grey=GREY_UNC)
+        # colour scales are the same for every slide (maps are normalised per slide): one pair per folder
+        colorbar(os.path.join(a.out, 'colorbar_attention.pdf'), 'Attention (normalised)')
+        colorbar(os.path.join(a.out, 'colorbar_mutual_information.pdf'), 'Mutual information (normalised)')
 
     if len(organs) > 1:   # outside the training scope: average the three organ models' scores
         keys = ['normalized_entropy', 'msp', 'mutual_information']
