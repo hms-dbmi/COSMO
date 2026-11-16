@@ -72,7 +72,9 @@ Outputs per slide and organ model (`<slide>_<organ>_*`) and per slide (`<slide>_
 - `colorbar_attention.pdf`, `colorbar_mutual_information.pdf`: one pair per output folder (maps are
   normalised per slide, so the scale is the same for every slide).
 
-Maps are 1024 x 1024 images without titles, drawn over the slide (`--wsi`) or the thumbnail
+By default each map is normalised per slide; `--mi-vmax 0.7` draws the uncertainty map on a fixed scale
+(0–0.7 nats) so that slides can be compared, as in the provided outputs and the README figure
+(`demo/make_readme_figure.py`). Maps are 1024 x 1024 images without titles, drawn over the slide (`--wsi`) or the thumbnail
 (`--thumbnail`, provided in the Zenodo record).
 
 ## How to read the outputs

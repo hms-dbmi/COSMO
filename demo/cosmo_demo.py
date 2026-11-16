@@ -181,7 +181,7 @@ def _paint(coords, values, patch_px, ds, shape):
     return m, cov
 
 
-def smooth_map(canvas, coords, values, patch_px, out_pdf, sigma, alpha, grey=None):
+def smooth_map(canvas, coords, values, patch_px, out_pdf, sigma, alpha, grey=None, vmax=None):
     """visualize_categorical_probs_smooth: paint tile values, Gaussian blur, min-max, jet overlay."""
     import matplotlib
     from PIL import Image
@@ -191,7 +191,10 @@ def smooth_map(canvas, coords, values, patch_px, out_pdf, sigma, alpha, grey=Non
     m, cov = _paint(coords, values, patch_px, HEAT_DS, (h, w))
     if sigma > 0:
         m = gaussian_filter(m, sigma)
-    m = (m - m.min()) / (m.max() - m.min() + 1e-8)
+    if vmax is None:                                    # per-slide min-max (vis_utils default)
+        m = (m - m.min()) / (m.max() - m.min() + 1e-8)
+    else:                                               # fixed scale: comparable across slides
+        m = np.clip(m / vmax, 0, 1)
     heat = matplotlib.colormaps.get_cmap('jet')(m); heat[:, :, 3] = alpha
     out = Image.alpha_composite(img.convert('RGBA'), Image.fromarray((heat * 255).astype(np.uint8)))
     if grey is not None:                                # grey out everything outside the tiled tissue
@@ -252,6 +255,9 @@ def main():
     ap.add_argument('--thumbnail', default=None, help='optional thumbnail (used when --wsi is not given)')
     ap.add_argument('--patch-px', type=int, default=None, help='tile size in level-0 pixels (read from h5 attrs if present)')
     ap.add_argument('--top-k', type=int, default=TOP_K, help='number of concepts mapped (max 8)')
+    ap.add_argument('--mi-vmax', type=float, default=None,
+                    help='draw the mutual-information map on a fixed scale [0, vmax] (nats) instead of per-slide '
+                         'min-max, so maps are comparable across slides')
     ap.add_argument('--run-id', type=int, default=0)
     ap.add_argument('--concept-root', default=os.path.join(ROOT, 'pretrained/concepts'))
     ap.add_argument('--weights-root', default=os.path.join(ROOT, 'pretrained/weights'))
@@ -332,11 +338,16 @@ def main():
         # one MI map per slide; outside the training scope, MI is averaged over the organ models
         # (as for the slide-level out_of_scope_scores)
         smooth_map(canvas, coords, np.mean(tile_mi_organs, 0), patch_px,
-                   os.path.join(a.out, f'{name}_mutual_information.pdf'), UNC_SIGMA, UNC_ALPHA, grey=GREY_UNC)
+                   os.path.join(a.out, f'{name}_mutual_information.pdf'), UNC_SIGMA, UNC_ALPHA, grey=GREY_UNC,
+                   vmax=a.mi_vmax)
         # colour scales are the same for every slide (maps are normalised per slide): one pair per folder
         colorbar(os.path.join(a.out, 'colorbar_attention.pdf'), 'Attention (normalised)')
-        colorbar(os.path.join(a.out, 'colorbar_mutual_information.pdf'), 'Mutual information (normalised)')
+        colorbar(os.path.join(a.out, 'colorbar_mutual_information.pdf'),
+                 'Mutual information (normalised)' if a.mi_vmax is None else f'Mutual information (0-{a.mi_vmax:g} nats)')
 
+    mi = np.mean(tile_mi_organs, 0)
+    report['tile_mutual_information'] = {'mean': float(mi.mean()), 'p50': float(np.percentile(mi, 50)),
+                                         'p95': float(np.percentile(mi, 95)), 'max': float(mi.max())}
     if len(organs) > 1:   # outside the training scope: average the three organ models' scores
         keys = ['normalized_entropy', 'msp', 'mutual_information']
         report['out_of_scope_scores'] = {k: float(np.mean([report['per_organ'][o]['uncertainty'][k] for o in organs])) for k in keys}
