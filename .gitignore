@@ -179,3 +179,4 @@ __pycache__/
 release/export_predictions.py
 release/export_features.py
 CITATION.cff
+release/ZENODO_DATA_README.md
