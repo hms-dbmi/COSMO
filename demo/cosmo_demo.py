@@ -260,6 +260,7 @@ def main():
     dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     os.makedirs(a.out, exist_ok=True)
     top_k = min(a.top_k, len(BRIGHT8))
+    name = a.slide_id.split('.')[0]          # output prefix: TCGA barcode up to DX1 (drops the file UUID)
 
     tiles = {fm: load_tiles(os.path.join(a.features_root, fm, a.slide_id + '.h5')) for fm in a.fms}
     coords, attrs = tiles[a.fms[0]][1], tiles[a.fms[0]][2]
@@ -314,7 +315,7 @@ def main():
                              for k in top],
         }
 
-        tag = f'{a.slide_id}_{organ}'
+        tag = f'{name}_{organ}'
         with open(os.path.join(a.out, tag + '_concepts.csv'), 'w', newline='') as f:
             w = csv.writer(f); w.writerow(['probability', 'subtype', 'concept'])
             for k in np.argsort(-slide_concept):
@@ -329,8 +330,8 @@ def main():
                        UNC_SIGMA, UNC_ALPHA, grey=GREY_UNC)
 
     if canvas is not None:
-        colorbar(os.path.join(a.out, f'{a.slide_id}_colorbar_attention.pdf'), 'Attention (normalised)')
-        colorbar(os.path.join(a.out, f'{a.slide_id}_colorbar_mutual_information.pdf'), 'Mutual information (normalised)')
+        colorbar(os.path.join(a.out, f'{name}_colorbar_attention.pdf'), 'Attention (normalised)')
+        colorbar(os.path.join(a.out, f'{name}_colorbar_mutual_information.pdf'), 'Mutual information (normalised)')
 
     if len(organs) > 1:   # outside the training scope: average the three organ models' scores
         keys = ['normalized_entropy', 'msp', 'mutual_information']
@@ -338,7 +339,7 @@ def main():
         report['note'] = ('Organ models were trained on malignant brain, lung or kidney tumours only. For slides outside '
                           'this scope the predicted subtype is not meaningful; high entropy and low MSP indicate the slide '
                           'should be deferred to a pathologist.')
-    with open(os.path.join(a.out, f'{a.slide_id}_report.json'), 'w') as f:
+    with open(os.path.join(a.out, f'{name}_report.json'), 'w') as f:
         json.dump(report, f, indent=2)
     print(json.dumps(report, indent=2))
 

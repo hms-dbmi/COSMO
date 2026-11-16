@@ -11,13 +11,13 @@ your own slides.
 
 | Slide | TCGA project | Role in the demo |
 |---|---|---|
-| `TCGA_LUNG_1` | TCGA-LUAD | lung model, common subtype |
-| `TCGA_LUNG_2` | TCGA-LUSC | lung model, common subtype |
-| `TCGA_KIDNEY_1` | TCGA-KIRP | kidney model, common subtype |
-| `TCGA_KIDNEY_2` | TCGA-KICH | kidney model, common subtype |
-| `TCGA_OOD_1` | TCGA-BRCA | outside the training scope: scored by all three organ models |
+| `TCGA-64-1680-01Z-00-DX1` | TCGA-LUAD | lung model, common subtype |
+| `TCGA-98-A538-01Z-00-DX1` | TCGA-LUSC | lung model, common subtype |
+| `TCGA-B9-4617-01Z-00-DX1` | TCGA-KIRP | kidney model, common subtype |
+| `TCGA-KN-8421-01Z-00-DX1` | TCGA-KICH | kidney model, common subtype |
+| `TCGA-A1-A0SD-01Z-00-DX1` | TCGA-BRCA (breast) | outside the training scope: scored by all three organ models (`_brain_`, `_lung_`, `_kidney_` outputs) |
 
-(Slide IDs and GDC file UUIDs are listed in [`tcga_demo_manifest.tsv`](tcga_demo_manifest.tsv).)
+(Files are named by the TCGA barcode up to `DX1`; the full GDC file names and UUIDs are in [`tcga_demo_manifest.tsv`](tcga_demo_manifest.tsv).)
 
 ## 1. Download the slides (optional)
 
