@@ -8,12 +8,21 @@ https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
 
 | Folder | What it holds |
 |---|---|
-| `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic and benign cohorts used for the uncertainty analyses. |
+| `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic cohorts used for the uncertainty analyses. Paths follow the code: `<cohort>_<ratio>_<label set>/<method>_none_<model>_<ratio>/[<training cohort>/]predictions_<method>_test_<run>_<split>.csv`. See *Naming* below. |
 | `splits/` | The five patient-level DFCI splits (`splits_{0-4}.csv`; columns train, val, test). |
 | `slide_to_patient/` | Slide-to-patient map for each cohort, used for patient-level bootstrap CIs. |
-| `demo/` | Tile features (UNI, GigaPath, CHIEF; CLAM .h5 with `features` and `coords`) and expected outputs for the public TCGA demo slides, including one slide outside the training scope. |
+| `demo/` | For five public TCGA slides (two lung, two kidney, one breast outside the training scope): tile features (UNI, GigaPath, CHIEF; .h5 with `features` and `coords`, one shared tile grid per slide), slide thumbnails, expected outputs, and `tcga_demo_manifest.tsv` (GDC file IDs and md5) for downloading the .svs files if you want to re-extract features. |
 | `Data_S1_Source_Data.xlsx` | Values plotted in every graph of the paper, one tab per figure. |
 | `MANIFEST.json` | File list with slide counts and class names. |
+
+## Naming
+
+- **Training setting (`<ratio>`):** `0.16` = full-shot (all training slides), `0.4` = few-shot (4 slides per
+  subtype). The ratio is the value of the code's `--ratio` argument, kept so that files match the code. Other
+  ratio values are additional runs not reported in the paper.
+- **Run:** `test_<k>` is DFCI split *k* (`splits/splits_<k>.csv`). External cohorts are scored by each run's model.
+- **Split:** `seen` = common subtypes, `unseen` = rare subtypes, `all` = all subtypes (generalized zero-shot setting).
+- **Training cohort:** for external cohorts, the extra folder (e.g. `dfcilung_coarse/`) names the DFCI cohort the model was trained on.
 
 ## De-identification
 
@@ -29,9 +38,9 @@ free-text diagnoses.
 git clone https://github.com/hms-dbmi/COSMO && cd COSMO
 python release/compute_metrics.py --files "<record>/predictions/**/*.csv" \
     --slide-to-patient "<record>/slide_to_patient/*.csv" --out metrics.csv
-# mean-softmax ensemble over foundation models for one cohort and split, as in the main results
-# (adjust the glob to the folder names in predictions/, see MANIFEST.json)
-python release/compute_metrics.py --ensemble --files "<record>/predictions/cosmo/*/full/dfcibrain/predictions_*_0_all.csv"
+# mean-softmax ensemble over foundation models for one external cohort, run and split
+python release/compute_metrics.py --ensemble \
+    --files "<record>/predictions/tcgalungtest_coarse_0.16_lungNIH/oursmm_none_*_0.16/dfcilung_coarse/predictions_oursmm_test_0_all.csv"
 ```
 
 ## Access to images
