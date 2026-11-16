@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Train and test COSMO on the released CHIEF features (Zenodo 10.5281/zenodo.24291267).
+# These are the commands used to check the release: test.py on DFCI kidney split 0 and on TCGA kidney
+# (softmax identical to the original, unhashed files) and a 1-epoch train.py run on DFCI kidney split 0.
+#
+#   bash scripts/release_train_example.sh /path/to/unzipped_features [/path/to/knowledge_dir]
+#
+# The first argument holds the unzipped features_chief_dfcikidney.zip and features_chief_tcgakidneytest.zip
+# (folders dfcikidney/ and tcgakidneytest/). The optional second argument is the folder with
+# kidneyNIH_knowledge_train.csv used by train.py (default: examples/data; see the note below).
+set -euo pipefail
+DATA=${1:?usage: release_train_example.sh <unzipped features dir> [knowledge dir]}
+KNOWLEDGE=${2:-examples/data}
+OUT=${OUT:-./release_example}
+mkdir -p "$OUT"
+
+# 1) Test the released kidney model (CHIEF) on DFCI kidney, split 0 (common, rare and all subtypes)
+python test.py --wsi-root "$DATA/dfcikidney/chief" --patient-csv "$DATA/dfcikidney/labels.csv" \
+    --split-csv "$DATA/dfcikidney/splits" --checkpoint pretrained/weights/kidneyNIH/chief \
+    --prev-type kidneyNIH --run-id 0 --eval-all --num-workers 1 --output-dir "$OUT/test_dfcikidney"
+
+# 2) Test on TCGA kidney (external; all slides are test): build a test-only split from labels.csv
+mkdir -p "$OUT/tcga_split"
+python - "$DATA/tcgakidneytest/labels.csv" "$OUT/tcga_split/splits_0.csv" <<'EOF'
+import sys, pandas as pd
+t = pd.read_csv(sys.argv[1]).case_id.drop_duplicates().tolist()
+pd.DataFrame({'train': [None] * len(t), 'val': [None] * len(t), 'test': t}).to_csv(sys.argv[2])
+EOF
+python test.py --wsi-root "$DATA/tcgakidneytest/chief" --patient-csv "$DATA/tcgakidneytest/labels.csv" \
+    --split-csv "$OUT/tcga_split" --checkpoint pretrained/weights/kidneyNIH/chief \
+    --prev-type kidneyNIH --run-id 0 --eval-all --num-workers 1 --output-dir "$OUT/test_tcgakidney"
+# TCGA kidney has three subtypes (CHRCC, PRCC, ccRCC); use the 3-class result in predictions_cosmo_0_all.csv.
+
+# 3) Train COSMO (Stage II) on DFCI kidney, split 0 (here 1 epoch; the paper used --epochs 100 --runs 5).
+# NOTE: train.py needs a knowledge file covering all five kidney subtypes; the shipped
+# examples/data/kidneyNIH_knowledge_train.csv covers four, so pass your own knowledge folder as the 2nd argument.
+python train.py --device cpu --prev kidneyNIH --dataset dfcikidney_coarse --feat chief \
+    --wsi_root "$DATA/dfcikidney/chief" --patient_csv "$DATA/dfcikidney/labels.csv" \
+    --split_csv "$DATA/dfcikidney/splits" --data_path "$KNOWLEDGE" \
+    --json src/cosmo/data/knowledge/templates/kidneyKT_prompt_names.json --model_name checkpoints/cosmollm \
+    --epochs 1 --runs 1 --output_dir "$OUT/train_dfcikidney"

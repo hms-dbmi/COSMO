@@ -136,12 +136,14 @@ def process_wsi_paths(slide_id: str, root_dir: str) -> str:
     Returns:
         Full path to WSI feature file
     """
-    # Extract extension and replace with .pt
-    ext = os.path.split(slide_id)[-1].split(".")[-1]
-    wsi_path = os.path.join(root_dir, slide_id.replace(f".{ext}", ".pt"))
+    # Replace the extension with .pt (IDs without an extension, e.g. the hashed IDs of the Zenodo
+    # release, get .pt appended)
+    base, ext = os.path.splitext(os.path.basename(slide_id))
+    stem = os.path.join(os.path.dirname(slide_id), base) if ext else slide_id
+    wsi_path = os.path.join(root_dir, stem + ".pt")
     
     # Try .pth if .pt doesn't exist
     if not os.path.isfile(wsi_path):
-        wsi_path = os.path.join(root_dir, slide_id.replace(f".{ext}", ".pth"))
+        wsi_path = os.path.join(root_dir, stem + ".pth")
     
     return wsi_path

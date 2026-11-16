@@ -1,19 +1,20 @@
-# COSMO: slide-level predictions, patient-level splits and demo data
+# COSMO: slide-level predictions, patient-level splits, tile features and demo data
 
 Data record accompanying "Biomedical Knowledge-Enhanced Multimodal Learning for Common and Rare Cancer
 Pathology Diagnosis - A Multi-Center Validation Study" (Chikontwe et al.). Code:
-https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
+https://github.com/hms-dbmi/COSMO. Record: [10.5281/zenodo.24291267](https://doi.org/10.5281/zenodo.24291267).
 
 ## Contents
 
 | Folder | What it holds |
 |---|---|
 | `predictions/` | One CSV per method, foundation model, training setting (full-shot, few-shot), cohort and split, as written by `test.py`: `slide, label, <one softmax column per class>`. Covers COSMO and all baselines on the DFCI test sets and the external cohorts (MUV, TVGH, HKU, TCGA), plus the brain mimic cohorts used for the uncertainty analyses. Paths follow the code: `<cohort>_<ratio>_<label set>/<method>[_none]_<model>_<ratio>/[<training cohort>/]predictions_<method>_test_<run>_<split>.csv`. See *Naming* below. |
-| `splits/` | The five patient-level DFCI splits (`splits_{0-4}.csv`; columns train, val, test). |
+| `splits/` | The five patient-level DFCI splits for brain, lung and kidney (`splits_{0-4}.csv`; columns train, val, test). |
+| `features_chief_<cohort>.zip` | CHIEF tile features, labels and splits for training and testing COSMO (see *Training features*). Checksums in `MD5SUMS.txt`. |
 | `slide_to_patient/` | Slide-to-patient map for each cohort, used for patient-level bootstrap CIs. |
 | `demo/` | For five public TCGA slides (two lung, two kidney, one breast outside the training scope): tile features (UNI, GigaPath, CHIEF; .h5 with `features` and `coords`, one shared tile grid per slide), slide thumbnails, expected outputs, and `tcga_demo_manifest.tsv` (GDC file IDs and md5) for downloading the .svs files if you want to re-extract features. |
 | `Data_S1_Source_Data.xlsx` | Values plotted in every graph of the paper, one tab per figure. |
-| `MANIFEST.json` | File list with slide counts and class names. |
+| `MANIFEST.json` | File list with slide counts and class names; `features` lists each zip with slide, patient and class counts, size and md5. |
 
 ## Naming
 
@@ -28,6 +29,37 @@ https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
 - **Run:** `test_<k>` is DFCI split *k* (`splits/splits_<k>.csv`). External cohorts are scored by each run's model.
 - **Split:** `seen` = common subtypes, `unseen` = rare subtypes, `all` = all subtypes (generalized zero-shot setting).
 - **Training cohort:** for external cohorts, the extra folder (e.g. `dfcilung_coarse/`) names the DFCI cohort the model was trained on.
+
+## Training features (CHIEF)
+
+CHIEF tile features (768-d, float32, exactly as used in the paper) for training and testing COSMO:
+
+| Zip | Cohort | Role | Slides | Patients | Splits |
+|---|---|---|---|---|---|
+| `features_chief_dfcibrain.zip` | DFCI brain | development | 1,010 | 978 | 5 |
+| `features_chief_dfcilung.zip` | DFCI lung | development | 992 | 912 | 5 |
+| `features_chief_dfcikidney.zip` | DFCI kidney | development | 232 | 230 | 5 |
+| `features_chief_tcgakidneytest.zip` | TCGA kidney | external test | 895 | 895 | none (all test) |
+
+Each zip contains `<cohort>/chief/<slide>.pt` (one tensor `[n_tiles, 768]` per slide), `<cohort>/labels.csv`
+(`slide_id, case_id, class_name`), `<cohort>/splits/splits_{0-4}.csv` (DFCI only) and `<cohort>/README.txt`.
+Identifiers are the same hashes as in `predictions/` and `slide_to_patient/`. Features for the other
+cohorts (and other foundation models) are available from the lead contact under data use agreements.
+
+Train on DFCI kidney and test on TCGA kidney (full commands in `scripts/release_train_example.sh` of the
+code repository):
+
+```bash
+unzip features_chief_dfcikidney.zip -d data && unzip features_chief_tcgakidneytest.zip -d data
+# test the released kidney model on DFCI kidney split 0
+python test.py --wsi-root data/dfcikidney/chief --patient-csv data/dfcikidney/labels.csv \
+    --split-csv data/dfcikidney/splits --checkpoint pretrained/weights/kidneyNIH/chief --prev-type kidneyNIH --eval-all
+# train on DFCI kidney split 0 (knowledge folder with kidneyNIH_knowledge_train.csv)
+python train.py --prev kidneyNIH --dataset dfcikidney_coarse --feat chief --wsi_root data/dfcikidney/chief \
+    --patient_csv data/dfcikidney/labels.csv --split_csv data/dfcikidney/splits --data_path <knowledge dir> \
+    --json src/cosmo/data/knowledge/templates/kidneyKT_prompt_names.json --model_name checkpoints/cosmollm
+# TCGA kidney is test only: scripts/release_train_example.sh builds its test-only split from labels.csv
+```
 
 ## De-identification
 

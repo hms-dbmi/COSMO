@@ -173,8 +173,13 @@ class WSIBagDataset(Dataset):
         
     def _get_zero_shot_precision(self) -> float:
         """Get zero-shot precision based on prevalence type."""
+        # fraction of classes that are common (seen), as in training: brain 3/7, lung 2/6, kidney 3/5
         if self.prevalence in ["brainNIH"]:
             return 0.50
+        if self.prevalence in ["lungNIH"]:
+            return 0.40
+        if self.prevalence in ["kidneyNIH"]:
+            return 0.60
         return 0.75  # Default
     
     def _validate_inputs(self) -> None:

@@ -433,7 +433,7 @@ def main():
     parser.add_argument('--checkpoint', type=str, default=None,
                        help='Path to model checkpoint (file or directory)')
     parser.add_argument('--prev-type', type=str, default='brainNIH',
-                       choices=['brainNIH'],
+                       choices=['brainNIH', 'lungNIH', 'kidneyNIH'],
                        help='Prevalence type for label mapping')
     parser.add_argument('--text-model', type=str, default='cosmo',
                        help='Text model type')
