@@ -49,7 +49,7 @@ and `coords` [N, 2].
 ```bash
 # a lung slide, scored with the lung model
 python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root demo/data/features \
-    --wsi demo/data/slides/<SLIDE_ID>.svs --organ lung --out demo/outputs
+    --thumbnail demo/data/thumbnails/<SLIDE_ID>.png --organ lung --out demo/outputs   # or --wsi <SLIDE_ID>.svs
 
 # a breast slide: outside the training scope, so score it with all three organ models
 python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root demo/data/features \
@@ -59,13 +59,20 @@ python demo/cosmo_demo.py --slide-id <SLIDE_ID> --features-root demo/data/featur
 Outputs per slide and organ model:
 
 - `*_report.json`: subtype probabilities (ensemble and per foundation model), the top concepts with
-  their relative share, and the uncertainty scores (normalized entropy, maximum softmax probability,
-  mutual information across foundation models). For `--organ auto`, `out_of_scope_scores` averages
-  the three organ models.
-- `*_attention.png`: attention heatmap, averaged over foundation models.
-- `*_concepts.png`: concept activation map; the highest-attention tiles are coloured by their
-  top-scoring concept.
-- `*_mutual_information.png`: tile-level disagreement between foundation models.
+  their slide-level probability and subtype, and the uncertainty scores (normalized entropy, maximum
+  softmax probability, mutual information across foundation models). For `--organ auto`,
+  `out_of_scope_scores` averages the three organ models.
+- `*_attention.pdf`: attention heatmap (per-tile attention, min-max normalised and averaged over
+  foundation models; smoothed jet overlay, background outside the tissue in grey).
+- `*_concepts.pdf`: concept activation map; tiles with above-average attention are coloured by their
+  top concept, for the 8 most frequent concepts. Legend in `*_concepts_legend.pdf`
+  (`(slide-level probability, subtype) concept`); all concepts in `*_concepts.csv`.
+- `*_mutual_information.pdf`: tile-level disagreement between foundation models (same styling as the
+  attention map).
+- `*_colorbar_{attention,mutual_information}.pdf`: colour scales (maps are normalised per slide).
+
+Maps are 1024 x 1024 images without titles, drawn over the slide (`--wsi`) or the thumbnail
+(`--thumbnail`, provided in the Zenodo record).
 
 ## How to read the outputs
 
