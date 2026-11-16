@@ -5,7 +5,7 @@ attention heatmap, concept activation map, and uncertainty scores, including for
 outside COSMO's training scope.
 
 The pre-extracted tile features and expected outputs for the demo slides are in the Zenodo data record
-([10.5281/zenodo.DATA_ID](https://doi.org/10.5281/zenodo.DATA_ID), folder `demo/`). With those files,
+([10.5281/zenodo.24291267](https://doi.org/10.5281/zenodo.24291267), folder `demo/`). With those files,
 step 3 runs on a laptop CPU in under a minute per slide. Steps 1 and 2 are only needed to run COSMO on
 your own slides.
 

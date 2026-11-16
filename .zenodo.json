@@ -14,6 +14,6 @@
   "access_right": "open",
   "related_identifiers": [
     {"identifier": "https://github.com/hms-dbmi/COSMO", "relation": "isSupplementTo", "scheme": "url"},
-    {"identifier": "10.5281/zenodo.DATA_ID", "relation": "isSupplementedBy", "scheme": "doi"}
+    {"identifier": "10.5281/zenodo.24291267", "relation": "isSupplementedBy", "scheme": "doi"}
   ]
 }
