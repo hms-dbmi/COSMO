@@ -21,8 +21,9 @@ https://github.com/hms-dbmi/COSMO (archived at 10.5281/zenodo.CODE_ID).
   subtype), `1.0` = zero-shot (no training on our cohorts). The ratio is the value of the code's `--ratio`
   argument, kept so that files match the code.
 - **Method (`<method>`):** `oursmm` = COSMO; `abmil`, `clam`, `meanmil` = MIL baselines; `coop`, `top`,
-  `cate`, `mscpt` = vision-language prompt/adapter baselines; `zsvlm` = zero-shot CONCH or KEEP;
-  `prism2` = zero-shot Prism2 (Virchow2 tile features). Only the evaluations reported in the paper are
+  `cate`, `mscpt` = vision-language prompt/adapter baselines; `zsvlm` = zero-shot KEEP;
+  `prism2` = zero-shot Prism2 (Virchow2 tile features). COSMO is also provided on Virchow2 (`oursmm_none_virchow2_*`)
+  for the comparison with Prism2 on the same tile features. Only the evaluations reported in the paper are
   included (no ablations).
 - **Run:** `test_<k>` is DFCI split *k* (`splits/splits_<k>.csv`). External cohorts are scored by each run's model.
 - **Split:** `seen` = common subtypes, `unseen` = rare subtypes, `all` = all subtypes (generalized zero-shot setting).
